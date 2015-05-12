@@ -43,6 +43,7 @@ namespace Web.Controllers.Api
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
+
             var theme = await _themesService.CreateNewThemeAsync(
                 new Theme { Title = themeBindingModel.ThemeTitle },
                 User.Identity.GetUserId());
