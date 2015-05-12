@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using Core.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -34,6 +35,15 @@ namespace DAL.DbContext
                 new Theme { Title = "Theme 3", Owner = user }
             };
             context.Themes.AddRange(themes);
+
+            // Seed some Messages
+            var theme = themes.First();
+            var messages = new List<Message>
+            {
+                new Message { Text = "Message 1", Theme = theme, User = user },
+                new Message { Text = "Message 2", Theme = theme, User = user }
+            };
+            context.Messages.AddRange(messages);
 
             base.Seed(context);
         }

@@ -18,16 +18,22 @@ namespace DAL.Implementations
         #endregion
 
         // Repositories
+        private IGenericRepository<ApplicationUser> _usersRepository;
+        public IGenericRepository<ApplicationUser> UsersRepository
+        {
+            get { return _usersRepository ?? (_usersRepository = new GenericRepository<ApplicationUser>(_dbContext)); }
+        }
+
         private IGenericRepository<Theme> _themesRepository;
         public IGenericRepository<Theme> ThemesRepository
         {
             get { return _themesRepository ?? (_themesRepository = new GenericRepository<Theme>(_dbContext)); }
         }
 
-        private IGenericRepository<ApplicationUser> _usersRepository;
-        public IGenericRepository<ApplicationUser> UsersRepository
+        private IGenericRepository<Message> _messagesRepository;
+        public IGenericRepository<Message> MessagesRepository
         {
-            get { return _usersRepository ?? (_usersRepository = new GenericRepository<ApplicationUser>(_dbContext)); }
+            get { return _messagesRepository ?? (_messagesRepository = new GenericRepository<Message>(_dbContext)); }
         }
 
         public async Task SaveChangesAsync()

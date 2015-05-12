@@ -57,8 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTO\AccountDTOs.cs" />
+    <Compile Include="DTO\MessageDTO.cs" />
     <Compile Include="DTO\ThemeDTO.cs" />
+    <Compile Include="Implementations\MessageService.cs" />
     <Compile Include="Implementations\ThemesService.cs" />
+    <Compile Include="Interfaces\IMessageService.cs" />
     <Compile Include="Interfaces\IThemesService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

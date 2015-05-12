@@ -15,7 +15,7 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Services.DTO;
-using Web.BindingModels;
+using Web.ControllersBindingModels;
 using Web.Core;
 using Web.Providers;
 using Web.Results;

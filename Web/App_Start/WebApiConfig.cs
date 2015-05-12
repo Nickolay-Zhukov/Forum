@@ -22,8 +22,15 @@ namespace Web
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            // Enforce Https
+            config.Routes.MapHttpRoute(
+                name: "MessagesApi",
+                routeTemplate: "api/themes/{themeId}/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
+
+            // Filters registration 
             config.Filters.Add(new RequireHttpsAttribute());
+            config.Filters.Add(new ValidateModelAttribute());
         }
     }
 }

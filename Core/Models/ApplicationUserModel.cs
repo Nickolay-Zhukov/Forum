@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -10,8 +11,8 @@ namespace Core.Models
         public bool IsBlocked { get; set; }
 
         // Navigation properties
-        // public virtual ICollection<Theme> Themes { get; set; }
-        // public virtual ICollection<Message> Messages { get; set; }
+        public virtual ICollection<Theme> Themes { get; set; }
+        public virtual ICollection<Message> Messages { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)
         {

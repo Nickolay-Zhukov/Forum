@@ -11,5 +11,7 @@ namespace DAL.DbContext
         public ApplicationDbContext() : base(ConnectionString) { }
 
         public DbSet<Theme> Themes { get; set; }
+
+        public System.Data.Entity.DbSet<Core.Models.Message> Messages { get; set; }
     }
 }

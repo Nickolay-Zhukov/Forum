@@ -1,4 +1,6 @@
-﻿namespace Core.Models
+﻿using System.Collections.Generic;
+
+namespace Core.Models
 {
     public class Theme
     {
@@ -8,7 +10,6 @@
 
         // Navigation properties
         public virtual ApplicationUser Owner { get; set; }
-        
-        // public virtual ICollection<Message> Messages { get; set; }
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }

@@ -6,8 +6,9 @@ namespace DAL.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IGenericRepository<Theme> ThemesRepository { get; }
         IGenericRepository<ApplicationUser> UsersRepository { get; }
+        IGenericRepository<Theme> ThemesRepository { get; }
+        IGenericRepository<Message> MessagesRepository { get; }
 
         Task SaveChangesAsync();
     }

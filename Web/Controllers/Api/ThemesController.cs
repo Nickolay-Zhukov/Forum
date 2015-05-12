@@ -6,7 +6,7 @@ using Core.Models;
 using Microsoft.AspNet.Identity;
 using Services.DTO;
 using Services.Interfaces;
-using Web.BindingModels;
+using Web.ControllersBindingModels;
 
 namespace Web.Controllers.Api
 {
@@ -28,7 +28,7 @@ namespace Web.Controllers.Api
         }
 
         // GET api/Themes/5
-        [ResponseType(typeof(ThemeDto))]
+        [ResponseType(typeof (ThemeDto))]
         public async Task<IHttpActionResult> GetTheme(int id)
         {
             var theme = await _themesService.GetThemeByIdAsync(id);
@@ -38,11 +38,10 @@ namespace Web.Controllers.Api
 
         // POST api/Themes
         [Authorize]
-        [ResponseType(typeof(Theme))]
+        [ResponseType(typeof (Theme))]
         public async Task<IHttpActionResult> PostTheme(ThemeBindingModel themeBindingModel)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-
 
             var theme = await _themesService.CreateNewThemeAsync(
                 new Theme { Title = themeBindingModel.ThemeTitle },
@@ -55,7 +54,7 @@ namespace Web.Controllers.Api
 
         // DELETE api/Themes/5
         [Authorize(Roles = "Admin")]
-        [ResponseType(typeof(Theme))]
+        [ResponseType(typeof (Theme))]
         public async Task<IHttpActionResult> DeleteTheme(int id)
         {
             var theme = await _themesService.DeleteThemeByIdAsync(id);

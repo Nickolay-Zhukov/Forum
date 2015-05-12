@@ -24,14 +24,14 @@ namespace Services.Implementations
             return _unitOfWork.ThemesRepository.Get().Select(
                 theme => new ThemeDto
                 {
-                    Id = theme.Id, Title = theme.Title, Author = theme.Owner.UserName
+                    Title = theme.Title, Author = theme.Owner.UserName
                 }).ToList();
         }
 
         public async Task<ThemeDto> GetThemeByIdAsync(int id)
         {
             var theme = await _unitOfWork.ThemesRepository.GetByIdAsync(id);
-            return new ThemeDto { Id = theme.Id, Title = theme.Title, Author = theme.Owner.UserName };
+            return new ThemeDto { Title = theme.Title, Author = theme.Owner.UserName };
         }
 
         public async Task<Theme> CreateNewThemeAsync(Theme newTheme, string ownerId)
