@@ -195,7 +195,6 @@
   <ItemGroup>
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="ControllersBindingModels\MessageBindingModel.cs" />
-    <Compile Include="Controllers\Api\ThemeController.cs" />
     <Compile Include="Controllers\Api\ThemesController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
