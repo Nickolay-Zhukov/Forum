@@ -1,13 +1,14 @@
 ﻿using System.Threading.Tasks;
 using Core.Models;
+using Services.DTO;
 
 namespace Services.Interfaces
 {
     public interface IMessageService
     {
-        Task<Message> CreateNewMessageAsync(int themeId, ApplicationUser user, string messageText);
-        Task<Message> EditMessageAsync(int id);
-        Task<Message> DeleteMessageAsync(int id);
-        Task<Message> QuoteMessageAsync(int id, string messageText);
+        Task<MessageDto> CreateNewMessageAsync(int themeId, ApplicationUser user, string messageText);
+        Task<MessageDto> QuoteMessageAsync(int id, ApplicationUser user, string messageText);
+        Task EditMessageAsync(int id, string messageText);
+        Task<MessageDto> DeleteMessageAsync(int id);
     }
 }

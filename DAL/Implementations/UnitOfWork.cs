@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Core.Models;
 using DAL.DbContext;
 using DAL.Interfaces;
@@ -36,9 +35,9 @@ namespace DAL.Implementations
             get { return _messagesRepository ?? (_messagesRepository = new GenericRepository<Message>(_dbContext)); }
         }
 
-        public async Task SaveChangesAsync()
+        public void SaveChanges()
         {
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
         }
 
         #region IDisposable members

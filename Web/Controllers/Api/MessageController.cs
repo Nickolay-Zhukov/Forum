@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -29,63 +30,43 @@ namespace Web.Controllers.Api
         #endregion
 
         #region Controller actions
-        // POST api/Message
+        // POST api/themes/5/message
         [ResponseType(typeof (MessageDto))]
         public async Task<IHttpActionResult> PostMessage(int themeId, MessageBindingModel messageBm)
         {
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            var message = await _messageService.CreateNewMessageAsync(themeId, user, messageBm.MessageText);
-            var messageDto = new MessageDto { Text  = message.Text, Author = user.UserName };
+            var messageDto = await _messageService.CreateNewMessageAsync(themeId, user, messageBm.MessageText);
 
+            
+            
             return CreatedAtRoute("DefaultApi", new { controller = "themes", id = themeId }, messageDto);
         }
 
-        // POST api/Message/5 - Quote message
-        //[ResponseType(typeof (Message))]
-        //public async Task<IHttpActionResult> PostMessage(int id)
-        //{
-        //    if (!ModelState.IsValid) return BadRequest(ModelState);
+        // POST api/themes/5/message/5 - Quote message
+        [ResponseType(typeof(MessageDto))]
+        public async Task<IHttpActionResult> QuoteMessage(int id, MessageBindingModel messageBm)
+        {
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            var messageDto = await _messageService.QuoteMessageAsync(id, user, messageBm.MessageText);
+            return CreatedAtRoute("DefaultApi", new { controller = "themes", id = messageDto.ThemeId }, messageDto);
+        }
 
-        //    // db.Messages.Add(message);
-        //    await _db.SaveChangesAsync();
-        //    var message = new Message();
+        // PUT api/themes/5/message/5
+        public async Task<IHttpActionResult> PutMessage(int id, MessageBindingModel messageBm)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            await _messageService.EditMessageAsync(id, messageBm.MessageText);
+            return StatusCode(HttpStatusCode.NoContent);
+        }
 
-        //    return CreatedAtRoute("DefaultApi", new {id = message.Id}, message);
-        //}
-
-        // PUT api/Message/5
-        //public async Task<IHttpActionResult> PutMessage(int id, Message message)
-        //{
-        //    if (!ModelState.IsValid) return BadRequest(ModelState);
-        //    if (id != message.Id) return BadRequest();
-
-        //    _db.Entry(message).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _db.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        // if (!MessageExists(id)) return NotFound();
-        //        // throw;
-        //    }
-
-        //    return StatusCode(HttpStatusCode.NoContent);
-        //}
-
-        // DELETE api/Message/5
-        //[ResponseType(typeof (Message))]
-        //public async Task<IHttpActionResult> DeleteMessage(int id)
-        //{
-        //    var message = await _db.Messages.FindAsync(id);
-        //    if (message == null) return NotFound();
-
-        //    _db.Messages.Remove(message);
-        //    await _db.SaveChangesAsync();
-
-        //    return Ok(message);
-        //}
+        // DELETE api/themes/5/message/5
+        [ResponseType(typeof(MessageDto))]
+        public async Task<IHttpActionResult> DeleteMessage(int id)
+        {
+            var messageDto = await _messageService.DeleteMessageAsync(id);
+            if (messageDto == null) return NotFound();
+            return Ok(messageDto);
+        }
         #endregion // Controller actions
     }
 }

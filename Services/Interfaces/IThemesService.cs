@@ -9,7 +9,7 @@ namespace Services.Interfaces
     {
         IEnumerable<ThemeDto> GetAllThemes();
         Task<ThemeDto> GetThemeByIdAsync(int id);
-        Task<Theme> CreateNewThemeAsync(Theme newTheme, string ownerId);
-        Task<Theme> DeleteThemeByIdAsync(int id);
+        Task<ThemeDto> CreateNewThemeAsync(ApplicationUser user, string themeTitle);
+        Task<ThemeDto> DeleteThemeByIdAsync(int id);
     }
 }

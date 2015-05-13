@@ -28,35 +28,37 @@ namespace Services.Implementations
                 }).ToList();
         }
 
-        public async Task<ThemeDto> GetThemeByIdAsync(int id)
+        public Task<ThemeDto> GetThemeByIdAsync(int id)
         {
-            var theme = await _unitOfWork.ThemesRepository.GetByIdAsync(id);
-            return new ThemeDto { Title = theme.Title, Author = theme.Owner.UserName };
+            var theme = _unitOfWork.ThemesRepository.GetById(id);
+            if (theme == null) return null;
+            var themeDto = new ThemeDto { Title = theme.Title, Author = theme.Owner.UserName };
+            return Task.FromResult(themeDto);
         }
 
-        public async Task<Theme> CreateNewThemeAsync(Theme newTheme, string ownerId)
+        public Task<ThemeDto> CreateNewThemeAsync(ApplicationUser user, string themeTitle)
         {
-            // Check theme title uniqueness
-            if (_unitOfWork.ThemesRepository.Get(theme => theme.Title == newTheme.Title).Any()) return null;
+            // Check theme title uniq
+            if (_unitOfWork.ThemesRepository.Get(theme => theme.Title == themeTitle).Any()) return null;
 
-            var owner = await _unitOfWork.UsersRepository.GetByIdAsync(ownerId);
-            newTheme.Owner = owner;
-            
+            var newTheme = new Theme { Title  = themeTitle, Owner = user };
             _unitOfWork.ThemesRepository.Insert(newTheme);
-            await _unitOfWork.SaveChangesAsync();
+            _unitOfWork.SaveChanges();
 
-            return newTheme;
+            var themeDto = new ThemeDto { Title = themeTitle, Author = user.UserName };
+            return Task.FromResult(themeDto);
         }
 
-        public async Task<Theme> DeleteThemeByIdAsync(int id)
+        public Task<ThemeDto> DeleteThemeByIdAsync(int id)
         {
-            var theme = await _unitOfWork.ThemesRepository.GetByIdAsync(id);
+            var theme = _unitOfWork.ThemesRepository.GetById(id);
             if (theme == null) return null;
 
             _unitOfWork.ThemesRepository.Delete(theme);
-            await _unitOfWork.SaveChangesAsync();
+            _unitOfWork.SaveChanges();
 
-            return theme;
+            var themeDto = new ThemeDto { Title = theme.Title, Author = theme.Owner.UserName };
+            return Task.FromResult(themeDto);
         }
     }
 }

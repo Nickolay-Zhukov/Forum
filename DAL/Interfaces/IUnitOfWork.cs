@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Core.Models;
 
 namespace DAL.Interfaces
@@ -10,6 +9,6 @@ namespace DAL.Interfaces
         IGenericRepository<Theme> ThemesRepository { get; }
         IGenericRepository<Message> MessagesRepository { get; }
 
-        Task SaveChangesAsync();
+        void SaveChanges();
     }
 }

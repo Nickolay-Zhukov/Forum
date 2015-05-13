@@ -2,7 +2,6 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using DAL.DbContext;
 using DAL.Interfaces;
 
@@ -30,9 +29,9 @@ namespace DAL.Implementations
             return orderBy != null ? orderBy(query) : query;
         }
 
-        public virtual async Task<TEntity> GetByIdAsync(object id)
+        public virtual TEntity GetById(object id)
         {
-            return await DBSet.FindAsync(id);
+            return DBSet.Find(id);
         }
 
         public virtual void Insert(TEntity entity)
@@ -40,12 +39,10 @@ namespace DAL.Implementations
             DBSet.Add(entity);
         }
 
-        public virtual async Task<bool> DeleteAsync(object id)
+        public virtual void Delete(object id)
         {
-            var entityToDelete = await DBSet.FindAsync(id);
-            if (entityToDelete == null) return false;
+            var entityToDelete = DBSet.Find(id);
             Delete(entityToDelete);
-            return true;
         }
 
         public virtual void Delete(TEntity entityToDelete)
