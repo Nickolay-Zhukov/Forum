@@ -28,12 +28,26 @@ namespace Services.Implementations
                 }).ToList();
         }
 
-        public Task<ThemeDto> GetThemeByIdAsync(int id)
+        public Task<ThemeDetailsDto> GetThemeByIdAsync(int id)
         {
             var theme = _unitOfWork.ThemesRepository.GetById(id);
             if (theme == null) return null;
-            var themeDto = new ThemeDto { Title = theme.Title, Author = theme.Owner.UserName };
-            return Task.FromResult(themeDto);
+
+            var dto = new ThemeDetailsDto
+            {
+                Title = theme.Title,
+                Author = theme.Owner.UserName,
+                Messages = _unitOfWork.MessagesRepository.
+                    Get(message => message.ThemeId == id).
+                    Select(message => new MessageDto
+                    {
+                        ThemeId = id,
+                        Author = message.User.UserName,
+                        Text = message.Text
+                    }).ToList()
+            };
+
+            return Task.FromResult(dto);
         }
 
         public Task<ThemeDto> CreateNewThemeAsync(ApplicationUser user, string themeTitle)
@@ -45,8 +59,8 @@ namespace Services.Implementations
             _unitOfWork.ThemesRepository.Insert(newTheme);
             _unitOfWork.SaveChanges();
 
-            var themeDto = new ThemeDto { Title = themeTitle, Author = user.UserName };
-            return Task.FromResult(themeDto);
+            var dto = new ThemeDto { Title = themeTitle, Author = user.UserName };
+            return Task.FromResult(dto);
         }
 
         public Task<ThemeDto> DeleteThemeByIdAsync(int id)
@@ -57,8 +71,8 @@ namespace Services.Implementations
             _unitOfWork.ThemesRepository.Delete(theme);
             _unitOfWork.SaveChanges();
 
-            var themeDto = new ThemeDto { Title = theme.Title, Author = theme.Owner.UserName };
-            return Task.FromResult(themeDto);
+            var dto = new ThemeDto { Title = theme.Title, Author = theme.Owner.UserName };
+            return Task.FromResult(dto);
         }
     }
 }

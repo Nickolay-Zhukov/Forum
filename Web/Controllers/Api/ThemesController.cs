@@ -36,12 +36,12 @@ namespace Web.Controllers.Api
         }
 
         // GET api/themes/5
-        [ResponseType(typeof(ThemeDto))]
+        [ResponseType(typeof(ThemeDetailsDto))]
         public async Task<IHttpActionResult> GetTheme(int id)
         {
-            var themeDto = await _themesService.GetThemeByIdAsync(id);
-            if (themeDto == null) return NotFound();
-            return Ok(themeDto);
+            var themeDetailsDto = await _themesService.GetThemeByIdAsync(id);
+            if (themeDetailsDto == null) return NotFound();
+            return Ok(themeDetailsDto);
         }
 
         // POST api/themes

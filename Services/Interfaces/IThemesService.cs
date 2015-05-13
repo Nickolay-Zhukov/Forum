@@ -8,7 +8,7 @@ namespace Services.Interfaces
     public interface IThemesService
     {
         IEnumerable<ThemeDto> GetAllThemes();
-        Task<ThemeDto> GetThemeByIdAsync(int id);
+        Task<ThemeDetailsDto> GetThemeByIdAsync(int id);
         Task<ThemeDto> CreateNewThemeAsync(ApplicationUser user, string themeTitle);
         Task<ThemeDto> DeleteThemeByIdAsync(int id);
     }

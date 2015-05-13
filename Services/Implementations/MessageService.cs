@@ -29,8 +29,8 @@ namespace Services.Implementations
             _unitOfWork.MessagesRepository.Insert(newMessage);
             _unitOfWork.SaveChanges();
 
-            var messageDto = new MessageDto { ThemeId = themeId, Author = user.UserName, Text = messageText };
-            return Task.FromResult(messageDto);
+            var dto = new MessageDto { ThemeId = themeId, Author = user.UserName, Text = messageText };
+            return Task.FromResult(dto);
         }
 
         public Task<MessageDto> QuoteMessageAsync(int id, ApplicationUser user, string messageText)
@@ -48,8 +48,8 @@ namespace Services.Implementations
             _unitOfWork.MessagesRepository.Update(quotedMessage);
             _unitOfWork.SaveChanges();
 
-            var messageDto = new MessageDto { ThemeId = newMessage.ThemeId, Author = user.UserName, Text = messageText };
-            return Task.FromResult(messageDto);
+            var dto = new MessageDto { ThemeId = newMessage.ThemeId, Author = user.UserName, Text = messageText };
+            return Task.FromResult(dto);
         }
 
         public Task<ServiceResult<MessageDto>> EditMessageAsync(int id, string messageText)
@@ -110,8 +110,8 @@ namespace Services.Implementations
             _unitOfWork.MessagesRepository.Delete(message);
             _unitOfWork.SaveChanges();
 
-            var messageDto = new MessageDto { ThemeId = message.ThemeId, Author = message.User.UserName, Text = message.Text };
-            var okResult = new ServiceResult<MessageDto>(messageDto);
+            var dto = new MessageDto { ThemeId = message.ThemeId, Author = message.User.UserName, Text = message.Text };
+            var okResult = new ServiceResult<MessageDto>(dto);
             
             return Task.FromResult(okResult);
         }
