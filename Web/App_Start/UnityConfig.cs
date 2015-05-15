@@ -15,6 +15,7 @@ namespace Web
 			var container = new UnityContainer();
 
             container.RegisterType<IThemesService, ThemesService>(new HierarchicalLifetimeManager());
+            container.RegisterType<IMessageService, MessageService>(new HierarchicalLifetimeManager());
             container.RegisterType<IUnitOfWork, UnitOfWork>(new HierarchicalLifetimeManager());
 
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);

@@ -193,8 +193,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountModels\AccountViewModels.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
-    <Compile Include="ControllersBindingModels\MessageBindingModel.cs" />
     <Compile Include="Controllers\Api\ThemesController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -206,12 +206,12 @@
     <Compile Include="Controllers\Api\MessageController.cs" />
     <Compile Include="Core\ApplicationUserManager.cs" />
     <Compile Include="Filters\RequireHttpsAttribute.cs" />
+    <Compile Include="Filters\ServicesExceptionFilterAttribute.cs" />
     <Compile Include="Filters\ValidateModelAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="ControllersBindingModels\AccountBindingModels.cs" />
-    <Compile Include="ControllersBindingModels\ThemeBindingModel.cs" />
+    <Compile Include="AccountModels\AccountBindingModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />

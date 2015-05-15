@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Web.ControllersBindingModels
+namespace Web.AccountModels
 {
     // Models used as parameters to AccountController actions.
 

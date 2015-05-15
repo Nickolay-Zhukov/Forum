@@ -7,14 +7,11 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Services.Interfaces;
 using Services.DTO;
-using Services.Results;
-using Web.ControllersBindingModels;
 using Web.Core;
-using Web.Filters;
 
 namespace Web.Controllers.Api
 {
-    [ValidateModel]
+    [Authorize]
     public class MessageController : ApiController
     {
         private readonly IMessageService _messageService;
@@ -30,52 +27,38 @@ namespace Web.Controllers.Api
         }
         #endregion
 
-        private IHttpActionResult ConvertFrom(ServiceResult<MessageDto> serviceResult)
-        {
-            switch (serviceResult.ErrorType)
-            {
-                case ErrorType.Ok: return Ok(serviceResult.DtoEntity);
-                case ErrorType.OkNoContent: return StatusCode(HttpStatusCode.NoContent);
-                case ErrorType.EntityNotFound: return NotFound();
-                case ErrorType.ImpossibleOperation: return BadRequest(serviceResult.ErrorMessage);
-            }
-            return BadRequest();
-        }
-
         #region Controller actions
         // POST api/themes/5/message
         [ResponseType(typeof (MessageDto))]
-        public async Task<IHttpActionResult> PostMessage(int themeId, MessageBindingModel model)
+        public async Task<IHttpActionResult> PostMessage(int themeId, MessageDto requestDto)
         {
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            var messageDto = await _messageService.CreateNewMessageAsync(themeId, user, model.MessageText);
-            if (messageDto == null) BadRequest("Specified theme doesn't exist");
-            return CreatedAtRoute("DefaultApi", new { controller = "themes", id = themeId }, messageDto);
+            var responseDto = await _messageService.CreateNewMessageAsync(themeId, requestDto, user);
+            return CreatedAtRoute("MessagesApi", new { themeId , id = responseDto.Id }, responseDto);
         }
 
         // POST api/themes/5/message/5 - Quote message
         [ResponseType(typeof(MessageDto))]
-        public async Task<IHttpActionResult> QuoteMessage(int id, MessageBindingModel model)
+        public async Task<IHttpActionResult> PostMessage(int themeId, int id, MessageDto requestDto)
         {
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            var messageDto = await _messageService.QuoteMessageAsync(id, user, model.MessageText);
-            if (messageDto == null) return NotFound();
-            return CreatedAtRoute("DefaultApi", new { controller = "themes", id = messageDto.ThemeId }, messageDto);
+            var responseDto = await _messageService.QuoteMessageAsync(themeId, id, requestDto, user);
+            return CreatedAtRoute("MessagesApi", new { themeId, id = responseDto.Id }, responseDto);
         }
 
         // PUT api/themes/5/message/5
-        public async Task<IHttpActionResult> PutMessage(int id, MessageBindingModel model)
+        public async Task<IHttpActionResult> PutMessage(int themeId, int id, MessageDto requestDto)
         {
-            var operationResult = await _messageService.EditMessageAsync(id, model.MessageText);
-            return ConvertFrom(operationResult);
+            await _messageService.EditMessageAsync(themeId, id, requestDto);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         // DELETE api/themes/5/message/5
         [ResponseType(typeof(MessageDto))]
-        public async Task<IHttpActionResult> DeleteMessage(int id)
+        public async Task<IHttpActionResult> DeleteMessage(int themeId, int id)
         {
-            var operationResult = await _messageService.DeleteMessageAsync(id);
-            return ConvertFrom(operationResult);
+            var responseDto = await _messageService.DeleteMessageAsync(themeId, id);
+            return Ok(responseDto);
         }
         #endregion // Controller actions
     }

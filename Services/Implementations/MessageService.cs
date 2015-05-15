@@ -1,15 +1,16 @@
-﻿using System.Data.Entity.Infrastructure;
+﻿using System;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Models;
 using DAL.Interfaces;
 using Services.DTO;
+using Services.ExceptionsAndErrors;
 using Services.Interfaces;
-using Services.Results;
 
 namespace Services.Implementations
 {
-    class MessageService : IMessageService
+    public class MessageService : BaseService, IMessageService
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -20,58 +21,61 @@ namespace Services.Implementations
         }
         #endregion
 
-        public Task<MessageDto> CreateNewMessageAsync(int themeId, ApplicationUser user, string messageText)
+        #region Special check methods
+        private static void IsMessageInTheme(Message message, int themeId)
         {
-            // Check that specified theme exists
-            if (!_unitOfWork.MessagesRepository.Get(theme => theme.Id == themeId).Any()) return null;
+            if (message.ThemeId == themeId) return;
+            var errorMessage = string.Format("Specified theme with id = {0} doesn't match message's theme with id = {1}", themeId, message.ThemeId);
+            throw new ActionArgumentException(errorMessage) { ErrorType = DataCheckingErrors.IdsMismatch };
+        }
 
-            var newMessage = new Message { ThemeId  = themeId, Text = messageText, User = user };
+        private static void IsMessageQuoted(Message message, string operationName)
+        {
+            if (!message.Quotes.Any()) return;
+            var errorMessage = string.Format("Specified message with id = {0} is quoted and can't be" + operationName + "ed", message.Id);
+            throw new MessageQuotedException(errorMessage);
+        }
+        #endregion // Special check methods
+
+        public Task<MessageDto> CreateNewMessageAsync(int themeId, MessageDto dto, ApplicationUser user)
+        {
+            var theme = _unitOfWork.ThemesRepository.GetById(themeId);
+            IsEntityExist(theme, theme.Id, "Theme");
+
+            var newMessage = new Message { ThemeId  = themeId, Text = dto.Text, User = user };
+            
             _unitOfWork.MessagesRepository.Insert(newMessage);
             _unitOfWork.SaveChanges();
 
-            var dto = new MessageDto { ThemeId = themeId, Author = user.UserName, Text = messageText };
-            return Task.FromResult(dto);
+            return Task.FromResult(new MessageDto(newMessage));
         }
 
-        public Task<MessageDto> QuoteMessageAsync(int id, ApplicationUser user, string messageText)
+        public Task<MessageDto> QuoteMessageAsync(int themeId, int id, MessageDto dto, ApplicationUser user)
         {
             var quotedMessage = _unitOfWork.MessagesRepository.GetById(id);
-            if (quotedMessage == null) return null;
+            IsEntityExist(quotedMessage, id, "Message");
+            IsMessageInTheme(quotedMessage, themeId);
 
-            var newMessage = new Message
-            {
-                ThemeId = quotedMessage.ThemeId, Text = messageText, User = user, Quote = quotedMessage
-            };
+            var newMessage = new Message { ThemeId = themeId, Text = dto.Text, User = user, Quote = quotedMessage };
             quotedMessage.Quotes.Add(newMessage);
             
             _unitOfWork.MessagesRepository.Insert(newMessage);
             _unitOfWork.MessagesRepository.Update(quotedMessage);
             _unitOfWork.SaveChanges();
 
-            var dto = new MessageDto { ThemeId = newMessage.ThemeId, Author = user.UserName, Text = messageText };
-            return Task.FromResult(dto);
+            return Task.FromResult(new MessageDto(newMessage));
         }
 
-        public Task<ServiceResult<MessageDto>> EditMessageAsync(int id, string messageText)
+        public Task EditMessageAsync(int themeId, int id, MessageDto dto)
         {
             var message = _unitOfWork.MessagesRepository.GetById(id);
-            if (message == null)
-            {
-                var errorResult = new ServiceResult<MessageDto> { ErrorType = ErrorType.EntityNotFound };
-                return Task.FromResult(errorResult);
-            }
+            IsEntityExist(message, id, "Message");
+            IsMessageInTheme(message, themeId);
+            IsMessageQuoted(message, "edit");
 
-            if (message.Quotes.Any())
-            {
-                var errorResult = new ServiceResult<MessageDto>
-                {
-                    ErrorType = ErrorType.ImpossibleOperation,
-                    ErrorMessage = "This message is quoted and can not be updated"
-                };
-                return Task.FromResult(errorResult);
-            }
-
-            message.Text = messageText;
+            message.Text = dto.Text;
+            message.DateTime = DateTime.Now;
+            
             _unitOfWork.MessagesRepository.Update(message);
             try
             {
@@ -79,41 +83,24 @@ namespace Services.Implementations
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (_unitOfWork.MessagesRepository.GetById(id) != null) throw;
-                var errorResult = new ServiceResult<MessageDto> { ErrorType = ErrorType.EntityNotFound };
-                return Task.FromResult(errorResult);
+                IsEntityExist(message, id, "Message");
+                throw; 
             }
 
-            var okResult = new ServiceResult<MessageDto> { ErrorType = ErrorType.OkNoContent };
-            return Task.FromResult(okResult);
+            return Task.FromResult<object>(null);
         }
 
-        public Task<ServiceResult<MessageDto>> DeleteMessageAsync(int id)
+        public Task<MessageDto> DeleteMessageAsync(int themeId, int id)
         {
             var message = _unitOfWork.MessagesRepository.GetById(id);
-            if (message == null)
-            {
-                var errorResult = new ServiceResult<MessageDto> { ErrorType = ErrorType.EntityNotFound };
-                return Task.FromResult(errorResult);
-            }
-
-            if (message.Quotes.Any())
-            {
-                var errorResult = new ServiceResult<MessageDto>
-                {
-                    ErrorType = ErrorType.ImpossibleOperation,
-                    ErrorMessage = "This message is quoted and can not be removed"
-                };
-                return Task.FromResult(errorResult);
-            }
+            IsEntityExist(message, id, "Message");
+            IsMessageInTheme(message, themeId);
+            IsMessageQuoted(message, "remov");
 
             _unitOfWork.MessagesRepository.Delete(message);
             _unitOfWork.SaveChanges();
-
-            var dto = new MessageDto { ThemeId = message.ThemeId, Author = message.User.UserName, Text = message.Text };
-            var okResult = new ServiceResult<MessageDto>(dto);
             
-            return Task.FromResult(okResult);
+            return Task.FromResult(new MessageDto(message));
         }
     }
 }

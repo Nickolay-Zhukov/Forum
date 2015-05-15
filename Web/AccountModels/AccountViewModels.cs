@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Services.DTO
+namespace Web.AccountModels
 {
     // Objects returned by AccountController actions.
 

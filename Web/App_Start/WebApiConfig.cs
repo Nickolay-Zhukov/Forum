@@ -31,6 +31,7 @@ namespace Web
             // Filters registration 
             config.Filters.Add(new RequireHttpsAttribute());
             config.Filters.Add(new ValidateModelAttribute());
+            config.Filters.Add(new ServicesExceptionFilterAttribute());
         }
     }
 }
