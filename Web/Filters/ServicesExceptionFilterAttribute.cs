@@ -1,5 +1,4 @@
-﻿using System.Data.Entity.Infrastructure;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Web.Http.Filters;
 using Services.ExceptionsAndErrors;
@@ -8,13 +7,11 @@ namespace Web.Filters
 {
     public class ServicesExceptionFilterAttribute : ExceptionFilterAttribute
     {
-        private static HttpResponseMessage BuildResponseMessage(HttpActionExecutedContext context, HttpStatusCode httpStatusCode, string reasonPhrase)
+        private static HttpResponseMessage BuildResponseMessage(HttpActionExecutedContext context, HttpStatusCode httpStatusCode, string reasonPhrase = null)
         {
-            return new HttpResponseMessage(httpStatusCode)
-            {
-                Content = new StringContent(context.Exception.Message),
-                ReasonPhrase = reasonPhrase
-            };
+            var responseMessage = new HttpResponseMessage(httpStatusCode) { Content = new StringContent(context.Exception.Message) };
+            if (reasonPhrase != null) responseMessage.ReasonPhrase = reasonPhrase;
+            return responseMessage;
         }
         
         public override void OnException(HttpActionExecutedContext context)
@@ -22,36 +19,34 @@ namespace Web.Filters
             if (context.Exception is ActionArgumentException)
             {
                 var httpStatusCode = HttpStatusCode.BadRequest;
-                var reasonPhrase = string.Empty;
 
                 var ex = context.Exception as ActionArgumentException;
                 switch (ex.ErrorType)
                 {
-                    case DataCheckingErrors.EntityNotFound:
-                        httpStatusCode = HttpStatusCode.NotFound;
-                        reasonPhrase = "Entity ID Not Found";
-                        break;
+                    case DataCheckingErrors.EmptyRequestBody:
                     case DataCheckingErrors.IdsMismatch:
                         httpStatusCode = HttpStatusCode.BadRequest;
-                        reasonPhrase = "Bad request";
+                        break;
+                    case DataCheckingErrors.EntityNotFound:
+                        httpStatusCode = HttpStatusCode.NotFound;
                         break;
                 }
-                context.Response = BuildResponseMessage(context, httpStatusCode, reasonPhrase);
+                context.Response = BuildResponseMessage(context, httpStatusCode);
+            }
+
+            if (context.Exception is SameThemeExistsException)
+            {
+                context.Response = BuildResponseMessage(context, HttpStatusCode.Conflict, "Data already exists");
+            }
+
+            if (context.Exception is AccessDeniedException)
+            {
+                context.Response = BuildResponseMessage(context, HttpStatusCode.Conflict, "Permission conflict");
             }
 
             if (context.Exception is MessageQuotedException)
             {
                 context.Response = BuildResponseMessage(context, HttpStatusCode.Conflict, "Data relations conflict");
-            }
-
-            if (context.Exception is SameThemeExistsException)
-            {
-                context.Response = BuildResponseMessage(context, HttpStatusCode.Conflict, "Data already exist");
-            }
-
-            if (context.Exception is DbUpdateConcurrencyException)
-            {
-                context.Response = BuildResponseMessage(context, HttpStatusCode.Conflict, "Data access denided");
             }
         }
     }

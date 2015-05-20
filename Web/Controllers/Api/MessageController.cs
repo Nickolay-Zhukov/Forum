@@ -1,13 +1,10 @@
 ﻿using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Services.Interfaces;
 using Services.DTO;
-using Web.Core;
 
 namespace Web.Controllers.Api
 {
@@ -15,10 +12,6 @@ namespace Web.Controllers.Api
     public class MessageController : ApiController
     {
         private readonly IMessageService _messageService;
-        private ApplicationUserManager UserManager
-        {
-            get { return Request.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
-        }
 
         #region Constructor
         public MessageController(IMessageService messageService)
@@ -28,37 +21,34 @@ namespace Web.Controllers.Api
         #endregion
 
         #region Controller actions
-        // POST api/themes/5/message
-        [ResponseType(typeof (MessageDto))]
+        // POST api/Themes/5/Message
+        [ResponseType(typeof(MessageDto))]
         public async Task<IHttpActionResult> PostMessage(int themeId, MessageDto requestDto)
         {
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            var responseDto = await _messageService.CreateNewMessageAsync(themeId, requestDto, user);
-            return CreatedAtRoute("MessagesApi", new { themeId , id = responseDto.Id }, responseDto);
+            var responseDto = await _messageService.CreateNewMessageAsync(themeId, requestDto, User.Identity.GetUserId());
+            return CreatedAtRoute("MessagesApi", new { themeId, controller = ControllerContext.ControllerDescriptor.ControllerName, id = responseDto.Id }, responseDto);
         }
 
-        // POST api/themes/5/message/5 - Quote message
+        // POST api/Themes/5/Message/5 - Quote message
         [ResponseType(typeof(MessageDto))]
         public async Task<IHttpActionResult> PostMessage(int themeId, int id, MessageDto requestDto)
         {
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            var responseDto = await _messageService.QuoteMessageAsync(themeId, id, requestDto, user);
-            return CreatedAtRoute("MessagesApi", new { themeId, id = responseDto.Id }, responseDto);
+            var responseDto = await _messageService.QuoteMessageAsync(themeId, id, requestDto, User.Identity.GetUserId());
+            return CreatedAtRoute("MessagesApi", new { themeId, controller = ControllerContext.ControllerDescriptor.ControllerName, id = responseDto.Id }, responseDto);
         }
 
-        // PUT api/themes/5/message/5
+        // PUT api/Themes/5/Message/5
         public async Task<IHttpActionResult> PutMessage(int themeId, int id, MessageDto requestDto)
         {
-            await _messageService.EditMessageAsync(themeId, id, requestDto);
+            await _messageService.EditMessageAsync(themeId, id, requestDto, User.Identity.GetUserId());
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // DELETE api/themes/5/message/5
+        // DELETE api/Themes/5/Message/5
         [ResponseType(typeof(MessageDto))]
         public async Task<IHttpActionResult> DeleteMessage(int themeId, int id)
         {
-            var responseDto = await _messageService.DeleteMessageAsync(themeId, id);
-            return Ok(responseDto);
+            return Ok(await _messageService.DeleteMessageAsync(themeId, id, User.Identity.GetUserId()));
         }
         #endregion // Controller actions
     }

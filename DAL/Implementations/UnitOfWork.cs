@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Core.Models;
 using DAL.DbContext;
 using DAL.Interfaces;
@@ -38,6 +39,10 @@ namespace DAL.Implementations
         public void SaveChanges()
         {
             _dbContext.SaveChanges();
+        }
+        public async Task SaveChangesAsync()
+        {
+            await _dbContext.SaveChangesAsync();
         }
 
         #region IDisposable members

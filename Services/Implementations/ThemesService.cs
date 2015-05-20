@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Models;
@@ -20,53 +21,57 @@ namespace Services.Implementations
         }
         #endregion
 
-        #region Special check methods
-        private void IsThemeUniq(ThemeDto themeDto)
+        #region Check methods
+        private void IsThemeTitleUniq(string themeTitle)
         {
-            if (!_unitOfWork.ThemesRepository.Get(theme => theme.Title == themeDto.Title).Any()) return;
+            if (!_unitOfWork.ThemesRepository.Get(theme => theme.Title == themeTitle).Any()) return;
             throw new SameThemeExistsException("Theme with specified title already exists");
         }
         #endregion
 
         public IEnumerable<ThemeDto> GetAllThemes()
         {
-            return _unitOfWork.ThemesRepository.Get().Select(theme => new ThemeDto(theme)).ToList();
-        }
-
-        public Task<ThemeDetailsDto> GetThemeByIdAsync(int id)
-        {
-            var theme = _unitOfWork.ThemesRepository.GetById(id);
-            IsEntityExist(theme, theme.Id, "Theme");
-
-            return Task.FromResult(new ThemeDetailsDto(theme)
+            return _unitOfWork.ThemesRepository.Get().Select(theme => new ThemeDto
             {
-                Messages = _unitOfWork.MessagesRepository.
-                    Get(message => message.ThemeId == id).
-                    Select(message => new MessageDto(message)).
-                    ToList()
-            });
+                Id = theme.Id,
+                Title = theme.Title,
+                Author = theme.Owner.UserName,
+                CreationDateTime = theme.CreationDateTime
+            }).ToList();
         }
 
-        public Task<ThemeDto> CreateNewThemeAsync(ThemeDto dto, ApplicationUser user)
+        public async Task<ThemeDetailsDto> GetThemeByIdAsync(int id)
         {
-            IsThemeUniq(dto);
+            var theme = await _unitOfWork.ThemesRepository.GetByIdAsync(id);
+            IsEntityExist(theme, id, "Theme");
 
-            var newTheme = new Theme { Title  = dto.Title, Owner = user };
-            _unitOfWork.ThemesRepository.Insert(newTheme);
-            _unitOfWork.SaveChanges();
+            return new ThemeDetailsDto(theme) { Messages = theme.Messages.Select(message => new MessageDto(message)) };
+        }
+
+        public async Task<ThemeDto> CreateNewThemeAsync(ThemeDto dto, string userId)
+        {
+            IsDtoNotNull(dto);
+            IsThemeTitleUniq(dto.Title);
+            var user = await _unitOfWork.UsersRepository.GetByIdAsync(userId);
+            IsEntityExist(user, userId, "User");
             
-            return Task.FromResult(new ThemeDto(newTheme));
+            var newTheme = new Theme { Title  = dto.Title, Owner = user, CreationDateTime = DateTime.Now };
+            
+            _unitOfWork.ThemesRepository.Insert(newTheme);
+            await _unitOfWork.SaveChangesAsync();
+            
+            return new ThemeDto(newTheme);
         }
 
-        public Task<ThemeDto> DeleteThemeByIdAsync(int id)
+        public async Task<ThemeDto> DeleteThemeByIdAsync(int id)
         {
-            var theme = _unitOfWork.ThemesRepository.GetById(id);
-            IsEntityExist(theme, theme.Id, "Theme");
+            var theme = await _unitOfWork.ThemesRepository.GetByIdAsync(id);
+            IsEntityExist(theme, id, "Theme");
 
             _unitOfWork.ThemesRepository.Delete(theme);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
 
-            return Task.FromResult(new ThemeDto(theme));
+            return new ThemeDto(theme);
         }
     }
 }

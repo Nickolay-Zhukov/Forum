@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using DAL.DbContext;
 using DAL.Interfaces;
 
@@ -12,11 +13,13 @@ namespace DAL.Implementations
         internal ApplicationDbContext Context;
         internal DbSet<TEntity> DBSet;
 
+        #region Constructor
         public GenericRepository(ApplicationDbContext context)
         {
             Context = context;
             DBSet = context.Set<TEntity>();
         }
+        #endregion
 
         public virtual IQueryable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
@@ -28,10 +31,13 @@ namespace DAL.Implementations
             query = includeProperties.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
             return orderBy != null ? orderBy(query) : query;
         }
-
         public virtual TEntity GetById(object id)
         {
             return DBSet.Find(id);
+        }
+        public virtual async Task<TEntity> GetByIdAsync(object id)
+        {
+            return await DBSet.FindAsync(id);
         }
 
         public virtual void Insert(TEntity entity)
@@ -44,7 +50,11 @@ namespace DAL.Implementations
             var entityToDelete = DBSet.Find(id);
             Delete(entityToDelete);
         }
-
+        public virtual async Task DeleteAsync(object id)
+        {
+            var entityToDelete = await DBSet.FindAsync(id);
+            Delete(entityToDelete);
+        }
         public virtual void Delete(TEntity entityToDelete)
         {
             if (Context.Entry(entityToDelete).State == EntityState.Detached) DBSet.Attach(entityToDelete);

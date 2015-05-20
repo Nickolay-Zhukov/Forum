@@ -1,23 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Services.DTO;
 using Services.Interfaces;
-using Web.Core;
 
 namespace Web.Controllers.Api
 {
     public class ThemesController : ApiController
     {
         private readonly IThemesService _themesService;
-        private ApplicationUserManager UserManager
-        {
-            get { return Request.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
-        }
 
         #region Constructor
         public ThemesController(IThemesService themesService)
@@ -27,31 +20,30 @@ namespace Web.Controllers.Api
         #endregion
 
         #region Controller actions
-        // GET api/themes
+        // GET api/Themes
         public IEnumerable<ThemeDto> GetThemes()
         {
             return _themesService.GetAllThemes();
         }
 
-        // GET api/themes/5
+        // GET api/Themes/5
         [ResponseType(typeof(ThemeDetailsDto))]
         public async Task<IHttpActionResult> GetTheme(int id)
         {
             return Ok(await _themesService.GetThemeByIdAsync(id));
         }
 
-        // POST api/themes
+        // POST api/Themes
         [Authorize]
         [ResponseType(typeof(ThemeDto))]
         public async Task<IHttpActionResult> PostTheme(ThemeDto requestDto)
         {
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            var responseDto = await _themesService.CreateNewThemeAsync(requestDto, user);
+            var responseDto = await _themesService.CreateNewThemeAsync(requestDto, User.Identity.GetUserId());
             return CreatedAtRoute("DefaultApi", new { id = responseDto.Id }, responseDto);
         }
 
-        // DELETE api/themes/5
-        [Authorize(Roles = "Admin")]
+        // DELETE api/Themes/5
+        [Authorize(Roles = "admin")]
         [ResponseType(typeof(ThemeDto))]
         public async Task<IHttpActionResult> DeleteTheme(int id)
         {

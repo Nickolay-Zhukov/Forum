@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.Models;
 using Services.DTO;
 
 namespace Services.Interfaces
@@ -9,7 +8,7 @@ namespace Services.Interfaces
     {
         IEnumerable<ThemeDto> GetAllThemes();
         Task<ThemeDetailsDto> GetThemeByIdAsync(int id);
-        Task<ThemeDto> CreateNewThemeAsync(ThemeDto dto, ApplicationUser user);
+        Task<ThemeDto> CreateNewThemeAsync(ThemeDto dto, string userId);
         Task<ThemeDto> DeleteThemeByIdAsync(int id);
     }
 }

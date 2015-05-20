@@ -24,7 +24,7 @@ namespace Web
 
             config.Routes.MapHttpRoute(
                 name: "MessagesApi",
-                routeTemplate: "api/themes/{themeId}/{controller}/{id}",
+                routeTemplate: "api/Themes/{themeId}/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
 

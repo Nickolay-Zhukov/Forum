@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Models;
@@ -21,7 +20,7 @@ namespace Services.Implementations
         }
         #endregion
 
-        #region Special check methods
+        #region Check methods
         private static void IsMessageInTheme(Message message, int themeId)
         {
             if (message.ThemeId == themeId) return;
@@ -29,78 +28,84 @@ namespace Services.Implementations
             throw new ActionArgumentException(errorMessage) { ErrorType = DataCheckingErrors.IdsMismatch };
         }
 
+        private async Task CheckMessageOwner(Message message, string userId)
+        {
+            var user = await _unitOfWork.UsersRepository.GetByIdAsync(userId);
+            if (user.UserName.ToLower() == "admin" || message.UserId == userId) return;
+            throw new AccessDeniedException("Current user doesn't have access rights to perform the requested operation");
+        }
+
         private static void IsMessageQuoted(Message message, string operationName)
         {
             if (!message.Quotes.Any()) return;
-            var errorMessage = string.Format("Specified message with id = {0} is quoted and can't be" + operationName + "ed", message.Id);
+            var errorMessage = string.Format("Specified message with id = {0} is quoted and can't be " + operationName + "ed", message.Id);
             throw new MessageQuotedException(errorMessage);
         }
-        #endregion // Special check methods
+        #endregion // Check methods
 
-        public Task<MessageDto> CreateNewMessageAsync(int themeId, MessageDto dto, ApplicationUser user)
+        public async Task<MessageDto> CreateNewMessageAsync(int themeId, MessageDto dto, string userId)
         {
-            var theme = _unitOfWork.ThemesRepository.GetById(themeId);
-            IsEntityExist(theme, theme.Id, "Theme");
+            IsDtoNotNull(dto);
+            var theme = await _unitOfWork.ThemesRepository.GetByIdAsync(themeId);
+            IsEntityExist(theme, themeId, "Theme");
+            var user = await _unitOfWork.UsersRepository.GetByIdAsync(userId);
+            IsEntityExist(user, userId, "User");
 
-            var newMessage = new Message { ThemeId  = themeId, Text = dto.Text, User = user };
+            var newMessage = new Message { Text = dto.Text, Theme  = theme, User = user, CreationDateTime = DateTime.Now };
             
             _unitOfWork.MessagesRepository.Insert(newMessage);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
 
-            return Task.FromResult(new MessageDto(newMessage));
+            return new MessageDto(newMessage);
         }
 
-        public Task<MessageDto> QuoteMessageAsync(int themeId, int id, MessageDto dto, ApplicationUser user)
+        public async Task<MessageDto> QuoteMessageAsync(int themeId, int id, MessageDto dto, string userId)
         {
-            var quotedMessage = _unitOfWork.MessagesRepository.GetById(id);
+            IsDtoNotNull(dto);
+            var quotedMessage = await _unitOfWork.MessagesRepository.GetByIdAsync(id);
             IsEntityExist(quotedMessage, id, "Message");
             IsMessageInTheme(quotedMessage, themeId);
+            var user = await _unitOfWork.UsersRepository.GetByIdAsync(userId);
+            IsEntityExist(user, userId, "User");
 
-            var newMessage = new Message { ThemeId = themeId, Text = dto.Text, User = user, Quote = quotedMessage };
+            var newMessage = new Message { Text = dto.Text, Theme = quotedMessage.Theme, User = user, CreationDateTime = DateTime.Now, Quote = quotedMessage };
             quotedMessage.Quotes.Add(newMessage);
             
             _unitOfWork.MessagesRepository.Insert(newMessage);
             _unitOfWork.MessagesRepository.Update(quotedMessage);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
 
-            return Task.FromResult(new MessageDto(newMessage));
+            return new MessageDto(newMessage);
         }
 
-        public Task EditMessageAsync(int themeId, int id, MessageDto dto)
+        public async Task EditMessageAsync(int themeId, int id, MessageDto dto, string userId)
         {
-            var message = _unitOfWork.MessagesRepository.GetById(id);
+            IsDtoNotNull(dto);
+            var message = await _unitOfWork.MessagesRepository.GetByIdAsync(id);
             IsEntityExist(message, id, "Message");
             IsMessageInTheme(message, themeId);
+            await CheckMessageOwner(message, userId);
             IsMessageQuoted(message, "edit");
 
             message.Text = dto.Text;
-            message.DateTime = DateTime.Now;
+            message.CreationDateTime = DateTime.Now;
             
             _unitOfWork.MessagesRepository.Update(message);
-            try
-            {
-                _unitOfWork.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                IsEntityExist(message, id, "Message");
-                throw; 
-            }
-
-            return Task.FromResult<object>(null);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public Task<MessageDto> DeleteMessageAsync(int themeId, int id)
+        public async Task<MessageDto> DeleteMessageAsync(int themeId, int id, string userId)
         {
-            var message = _unitOfWork.MessagesRepository.GetById(id);
+            var message = await _unitOfWork.MessagesRepository.GetByIdAsync(id);
             IsEntityExist(message, id, "Message");
             IsMessageInTheme(message, themeId);
+            await CheckMessageOwner(message, userId);
             IsMessageQuoted(message, "remov");
 
             _unitOfWork.MessagesRepository.Delete(message);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
             
-            return Task.FromResult(new MessageDto(message));
+            return new MessageDto(message);
         }
     }
 }

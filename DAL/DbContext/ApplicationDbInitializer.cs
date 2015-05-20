@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Core.Models;
@@ -14,7 +15,7 @@ namespace DAL.DbContext
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
-            const string name = "Admin";
+            const string name = "admin";
             const string password = "Adm123_";
 
             // Create Role Admin if it doesn't exist
@@ -30,9 +31,9 @@ namespace DAL.DbContext
             // Seed some Themes
             var themes = new List<Theme>
             {
-                new Theme { Title = "Theme 1", Owner = user},
-                new Theme { Title = "Theme 2", Owner = user },
-                new Theme { Title = "Theme 3", Owner = user }
+                new Theme { Owner = user, Title = "Theme 1", CreationDateTime = DateTime.Now },
+                new Theme { Owner = user, Title = "Theme 2", CreationDateTime = DateTime.Now },
+                new Theme { Owner = user, Title = "Theme 3", CreationDateTime = DateTime.Now }
             };
             context.Themes.AddRange(themes);
 
@@ -40,8 +41,8 @@ namespace DAL.DbContext
             var theme = themes.First();
             var messages = new List<Message>
             {
-                new Message { Text = "Message 1", Theme = theme, User = user },
-                new Message { Text = "Message 2", Theme = theme, User = user }
+                new Message { Text = "Message 1", Theme = theme, User = user, CreationDateTime = DateTime.Now },
+                new Message { Text = "Message 2", Theme = theme, User = user, CreationDateTime = DateTime.Now }
             };
             context.Messages.AddRange(messages);
 
