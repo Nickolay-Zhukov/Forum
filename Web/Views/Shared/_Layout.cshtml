@@ -1,9 +1,22 @@
 ﻿<!DOCTYPE html>
-<html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
+    <title>Foo Forum</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="~/scripts/app/bower_components/html5-boilerplate/css/normalize.css">
+    <link rel="stylesheet" href="~/scripts/app/bower_components/html5-boilerplate/css/main.css">
+    <link rel="stylesheet" href="~/scripts/app/app.css">
+    
+    <script src="~/scripts/app/bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
@@ -16,23 +29,35 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", null, new { @class = "navbar-brand" })
+                @Html.ActionLink("Foo Forum", "Index", "Home", null, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
+                    <li><a href="#/view1">View 1</a></li>
+                    <li><a href="#/view2">View 2</a></li>
                 </ul>
             </div>
         </div>
     </div>
+    
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
+        <footer> <p>&copy; @DateTime.Now.Year - Foo Forum</p> </footer>
     </div>
+    
+    <!-- In production use:
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script> -->
+    <script src="~/scripts/app/bower_components/angular/angular.js"></script>
+    <script src="~/scripts/app/bower_components/angular-route/angular-route.js"></script>
+    <script src="~/scripts/app/components/version/version.js"></script>
+    <script src="~/scripts/app/components/version/version-directive.js"></script>
+    <script src="~/scripts/app/components/version/interpolate-filter.js"></script>
 
+    <script src="~/scripts/app/app.js"></script>
+    <script src="~/scripts/app/view1/view1.js"></script>
+    <script src="~/scripts/app/view2/view2.js"></script>
+    
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
