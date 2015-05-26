@@ -4,17 +4,13 @@
 <!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
 <head>
-    <title>Foo Forum</title>
-
+    <title>Foo forum</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
     <link rel="stylesheet" href="~/scripts/app/bower_components/html5-boilerplate/css/normalize.css">
     <link rel="stylesheet" href="~/scripts/app/bower_components/html5-boilerplate/css/main.css">
-    <link rel="stylesheet" href="~/scripts/app/app.css">
-    
     <script src="~/scripts/app/bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
 
     @Styles.Render("~/Content/css")
@@ -29,12 +25,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Foo Forum", "Index", "Home", null, new { @class = "navbar-brand" })
+                <a href="#/themes" class="navbar-brand">Foo forum</a>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="#/view1">View 1</a></li>
-                    <li><a href="#/view2">View 2</a></li>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#/register">Register</a></li>
+                    <li><a href="#/login">Log in</a></li>
                 </ul>
             </div>
         </div>
@@ -43,23 +39,24 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer> <p>&copy; @DateTime.Now.Year - Foo Forum</p> </footer>
+        <footer> <p>&copy; @DateTime.Now.Year - Foo forum</p> </footer>
     </div>
     
-    <!-- In production use:
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script> -->
     <script src="~/scripts/app/bower_components/angular/angular.js"></script>
     <script src="~/scripts/app/bower_components/angular-route/angular-route.js"></script>
     <script src="~/scripts/app/components/version/version.js"></script>
     <script src="~/scripts/app/components/version/version-directive.js"></script>
     <script src="~/scripts/app/components/version/interpolate-filter.js"></script>
-
-    <script src="~/scripts/app/app.js"></script>
-    <script src="~/scripts/app/view1/view1.js"></script>
-    <script src="~/scripts/app/view2/view2.js"></script>
-    
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    
+    <!-- App scripts -->
+    <script src="~/scripts/app/app.js"></script>
+    <script src="~/scripts/app/services/accountService.js"></script>
+    <script src="~/scripts/app/services/themesService.js"></script>
+    <script src="~/scripts/app/register/register.js"></script>
+    <script src="~/scripts/app/login/login.js"></script>
+    <script src="~/scripts/app/themes/themes.js"></script>
 </body>
 </html>
