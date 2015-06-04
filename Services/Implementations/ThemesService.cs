@@ -31,13 +31,13 @@ namespace Services.Implementations
 
         public IEnumerable<ThemeDto> GetAllThemes()
         {
-            return _unitOfWork.ThemesRepository.Get().Select(theme => new ThemeDto
+            return _unitOfWork.ThemesRepository.Get().ToList().Select(theme => new ThemeDto
             {
                 Id = theme.Id,
                 Title = theme.Title,
                 Author = theme.Owner.UserName,
                 CreationDateTime = theme.CreationDateTime
-            }).ToList();
+            });
         }
 
         public async Task<ThemeDetailsDto> GetThemeByIdAsync(int id)

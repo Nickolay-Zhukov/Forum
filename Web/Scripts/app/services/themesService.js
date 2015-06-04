@@ -1,4 +1,6 @@
-﻿angular.module('myApp.themesService', [])
+﻿'use strict';
+
+angular.module('myApp.themesService', [])
 
 .service('themesService', ['$http', function ($http) {
 	return {

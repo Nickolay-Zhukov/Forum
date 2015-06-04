@@ -1,0 +1,16 @@
+.v-gap {
+  margin-top: 30px;
+}
+
+.err-col {
+  padding-left: 0px;
+}
+
+.form-group .help-block {
+  margin-top: 7px;
+  margin-bottom: 8px;
+}
+
+textarea { 
+  resize: vertical;
+}

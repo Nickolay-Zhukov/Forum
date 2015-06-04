@@ -6,7 +6,7 @@ angular.module('myApp.Register', ['ngRoute'])
     $routeProvider.when('/register', {
         templateUrl: 'scripts/app/register/register.html',
         controller: 'RegisterController'
-  });
+    });
 }])
 
 .controller('RegisterController', ['$scope', 'accountService', function ($scope, accountService) {
@@ -15,7 +15,6 @@ angular.module('myApp.Register', ['ngRoute'])
     $scope.confirmPassword = '';
 
 	$scope.register = function () {
-		debugger;
 		accountService.register($scope.user, $scope.password, $scope.confirmPassword).then(
             function (data) { var order = data; },
             function (reason) { }
@@ -23,7 +22,6 @@ angular.module('myApp.Register', ['ngRoute'])
 	};
 
 	$scope.token = function () {
-		debugger;
 		accountService.token($scope.user, $scope.password).then(
             function (data) { var order = data; },
             function (reason) { }

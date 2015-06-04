@@ -5,12 +5,11 @@ angular.module('myApp.Themes', ['ngRoute'])
 .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/themes', {
         templateUrl: 'scripts/app/themes/themes.html',
-        controller: 'ThemesController'
+        controller: 'themesController'
     });
 }])
 
-.controller('ThemesController', ['$scope', 'themesService', function ($scope, themesService) {
-    themesService.getThemes().then(function (data) {
-        $scope.themes = data.data;
-    });
+.controller('themesController', ['$scope', '$rootScope', 'ThemesVm', function ($scope, $rootScope, ThemesVm) {
+    $rootScope.viewTitle = "Themes";
+    $scope.vm = new ThemesVm();
 }]);

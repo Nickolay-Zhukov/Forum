@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('myApp.accountService', [])
 
 .factory('sessionInterceptor', ['sessionService', function (sessionService) {
@@ -5,7 +7,6 @@ angular.module('myApp.accountService', [])
         request: function (config) {
             if (sessionService.isLoggedIn()) {
                 config.headers.authorization = 'bearer ' + sessionService.getToken();
-                debugger;
             }
             return config;
         }
@@ -17,20 +18,19 @@ angular.module('myApp.accountService', [])
     $httpProvider.interceptors.push('sessionInterceptor');
 }])
 
-.service('sessionService', ['$log', function ($log) {
+.service('sessionService', [function() {
     var session = {};
     return {
         setToken: function (token) {
             session.token = token;
-            debugger;
         },
-        getToken: function () {
+        getToken: function() {
             return session.token;
         },
-        clearSession: function () {
+        clearSession: function() {
             session.token = undefined;
         },
-        isLoggedIn: function () {
+        isLoggedIn: function() {
             return !!session.token;
         }
     };
@@ -38,7 +38,7 @@ angular.module('myApp.accountService', [])
 
 .service('accountService', ['$http', 'sessionService', function ($http, sessionService) {
 	return {
-		register : function (username, password, confirmPassword) {
+		register: function (username, password, confirmPassword) {
 			return $http.post('https://localhost:44300/api/account/register',
 				{ Username: username, Password: password, ConfirmPassword: confirmPassword });
 		},
@@ -49,11 +49,12 @@ angular.module('myApp.accountService', [])
 			    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 			    data: "userName=" + username + "&password=" + password + "&grant_type=password"
             }
-			return $http(tokenRequest).then(function (data) {
-			    debugger;
-			    sessionService.setToken(data.data.access_token);
-			    debugger;
+			return $http(tokenRequest).then(function (response) {
+			    sessionService.setToken(response.data.access_token);
 			});
-		}
+		},
+        logoff: function() {
+            sessionService.clearSession();
+        }
 	};
 }]);

@@ -1,0 +1,16 @@
+.theme {
+  margin-top: 10px;	
+}
+
+.theme > .col-md-12 > a {
+  color: #24476B;
+}
+
+.theme-title {
+  display: inline-block;
+}
+
+.theme-footer {
+  background-color: #f5f5f5;
+  padding: 1px 5px;
+}

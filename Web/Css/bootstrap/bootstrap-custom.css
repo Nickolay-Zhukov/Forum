@@ -1,0 +1,23 @@
+.page-header {
+  padding-bottom: 0px;
+  margin-bottom: 10px;
+}
+
+.btn-default {
+  background-color: #f5f5f5;
+}
+
+blockquote {
+  display:inline-block;
+  background: #f9f9f9;
+  padding: 5px 15px;
+  margin: 0 0 15px;
+  font-size: 14px;
+  border-left: 5px solid #71BDBD;
+}
+
+.control-label {
+  padding-top: 7px;
+  margin-bottom: 0;
+  text-align: right;
+}
