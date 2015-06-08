@@ -2,6 +2,9 @@
 
 namespace Services.ExceptionsAndErrors
 {
+    /// <summary>
+    /// Action argument exception
+    /// </summary>
     public class ActionArgumentException : ArgumentException
     {
         public DataCheckingErrors ErrorType { get; set; }

@@ -17,6 +17,7 @@ namespace DAL.Implementations
         public GenericRepository(ApplicationDbContext context)
         {
             Context = context;
+            context.Database.Log = m => System.Diagnostics.Debug.WriteLine(m);
             DBSet = context.Set<TEntity>();
         }
         #endregion

@@ -38,7 +38,7 @@ namespace Services.Implementations
         private static void IsMessageQuoted(Message message, string operationName)
         {
             if (!message.Quotes.Any()) return;
-            var errorMessage = string.Format("Specified message with id = {0} is quoted and can't be " + operationName + "ed", message.Id);
+            var errorMessage = string.Format("Specified message with id = {0} is quoted and can't be " + operationName.TrimEnd('e') + "ed", message.Id);
             throw new MessageQuotedException(errorMessage);
         }
         #endregion // Check methods

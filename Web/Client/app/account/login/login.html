@@ -1,0 +1,39 @@
+﻿<div class="page-header">
+    <h2>Log in</h2>
+</div>
+
+<form name="loginForm" class="form-horizontal v-gap" ng-submit="vm.login()" novalidate>
+    
+    <!-- User name -->
+    <div class="form-group row" ng-class="{ 'has-error' : loginForm.userName.$invalid && !loginForm.userName.$pristine }">
+        <label class="control-label col-md-2">User name</label>
+        <div class="col-md-3">
+            <input type="text" name="userName" class="form-control" ng-model="vm.user" required ng-minlength="2" ng-maxlength="100" autofocus />
+        </div>
+        <div class="col-md-3 err-col">
+            <span ng-show="loginForm.userName.$dirty && loginForm.userName.$error.required" class="help-block">Name is required</span>
+            <span ng-show="loginForm.userName.$dirty && loginForm.userName.$error.minlength" class="help-block">Name is too short</span>
+            <span ng-show="loginForm.userName.$dirty && loginForm.userName.$error.maxlength" class="help-block">Name is too long</span>
+        </div>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group row" ng-class="{ 'has-error' : loginForm.password.$invalid && !loginForm.password.$pristine }">
+        <label class="control-label col-md-2 ">Password</label>
+        <div class="col-md-3">
+            <input type="password" name="password" class="form-control" ng-model="vm.password" required ng-minlength="6" ng-maxlength="100" />
+        </div>
+        <div class="col-md-3 err-col">
+            <span ng-show="loginForm.password.$dirty && loginForm.password.$error.required" class="help-block">Password is required</span>
+            <span ng-show="loginForm.password.$dirty && loginForm.password.$error.minlength" class="help-block">Password is too short</span>
+            <span ng-show="loginForm.password.$dirty && loginForm.password.$error.maxlength" class="help-block">Password is too long</span>
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="form-group row">
+        <div class="col-md-5 col-md-offset-2">
+            <button type="submit" class="btn btn-default">Log in</button>
+        </div>
+    </div>
+</form>

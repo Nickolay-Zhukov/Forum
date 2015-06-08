@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
 using Microsoft.AspNet.Identity;
 using Services.DTO;
 using Services.Interfaces;
@@ -27,7 +26,6 @@ namespace Web.Controllers.Api
         }
 
         // GET api/Themes/5
-        [ResponseType(typeof(ThemeDetailsDto))]
         public async Task<IHttpActionResult> GetTheme(int id)
         {
             return Ok(await _themesService.GetThemeByIdAsync(id));
@@ -35,7 +33,6 @@ namespace Web.Controllers.Api
 
         // POST api/Themes
         [Authorize]
-        [ResponseType(typeof(ThemeDto))]
         public async Task<IHttpActionResult> PostTheme(ThemeDto requestDto)
         {
             var responseDto = await _themesService.CreateNewThemeAsync(requestDto, User.Identity.GetUserId());
@@ -43,8 +40,7 @@ namespace Web.Controllers.Api
         }
 
         // DELETE api/Themes/5
-        [Authorize(Roles = "admin")]
-        [ResponseType(typeof(ThemeDto))]
+        [Authorize(Roles = "Admin")]
         public async Task<IHttpActionResult> DeleteTheme(int id)
         {
             return Ok(await _themesService.DeleteThemeByIdAsync(id));

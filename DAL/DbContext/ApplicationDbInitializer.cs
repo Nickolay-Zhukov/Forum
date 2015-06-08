@@ -15,7 +15,7 @@ namespace DAL.DbContext
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
-            const string name = "admin";
+            const string name = "Admin";
             const string password = "Adm123_";
 
             // Create Role Admin if it doesn't exist
