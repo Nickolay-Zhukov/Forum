@@ -2,13 +2,13 @@
     <h2>Themes</h2>
 </div>
 
-<!-- Themes template -->
+<!-- Theme template -->
 <div class="row theme" ng-repeat="theme in vm.themes">
 	<div class="col-md-12">
-		<a href="" class="theme-title"><h3>{{theme.Title}}</h3></a>
+        <a href="#/themes/{{theme.Id}}" class="theme-title"><h3>{{theme.Title}}</h3></a>
 		<div class="theme-footer">
 			<span>Started by <strong>{{theme.Author}}</strong> {{theme.CreationDateTime | date:"dd.MM.yyyy"}}</span>
-			<a href="" class="pull-right">Delete</a>
+		    <a href="javascript:void(0)" class="pull-right" ng-click="vm.deleteTheme(theme.Id)" ng-show="accountState.isAdmin()">Delete</a>
 		</div>
 	</div>
 </div>
@@ -16,6 +16,6 @@
 <!-- Buttons -->
 <div class="row button-container">
 	<div class="col-md-1">
-		<button class="btn btn-default">Create new theme</button>
+        <button class="btn btn-default" ng-click="vm.createNewTheme()">Create new theme</button>
 	</div>
 </div>

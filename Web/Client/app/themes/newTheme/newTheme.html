@@ -1,0 +1,29 @@
+﻿<div class="page-header">
+    <h2>Create new theme</h2>
+</div>
+
+<form name="themeForm" class="form-horizontal v-gap" ng-submit="createNewTheme()" novalidate>
+    <!-- Theme title -->
+    <div class="form-group row" ng-class="{ 'has-error' : themeForm.themeTitle.$invalid && !themeForm.themeTitle.$pristine }">
+        <label class="control-label col-md-2">Theme title</label>
+        <div class="col-md-7">
+            <input type="text" name="themeTitle" class="form-control" ng-model="vm.themeTitle" required ng-minlength="2" ng-maxlength="100" autofocus />
+        </div>
+        <div class="col-md-3 err-col">
+            <span ng-show="themeForm.themeTitle.$dirty && themeForm.themeTitle.$error.required" class="help-block">Theme title is required</span>
+            <span ng-show="themeForm.themeTitle.$dirty && themeForm.themeTitle.$error.minlength" class="help-block">Theme title is too short</span>
+            <span ng-show="themeForm.themeTitle.$dirty && themeForm.themeTitle.$error.maxlength" class="help-block">Theme title is too long</span> 
+        </div>
+    </div>
+    <!-- Buttons -->
+    <div class="form-group row">
+        <div class="col-md-10 col-md-offset-2">
+            <div class="btn-group">
+                <button type="submit" class="btn btn-default" ng-click="vm.createNewTheme()" ng-disabled="themeForm.$invalid">Create</button>
+            </div>
+            <div class="btn-group">
+                <a class="btn btn-default" href="#/themes">Back</a>
+            </div>
+        </div>  
+    </div>
+</form>

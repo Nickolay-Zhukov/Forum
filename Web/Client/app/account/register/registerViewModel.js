@@ -1,7 +1,7 @@
 ﻿'use strict';
 angular.module('app.account')
 
-.factory('RegisterViewModel', ['accountService', function (accountService) {
+.factory('RegisterViewModel', ['$location', 'accountService', function ($location, accountService) {
     return function () {
         var self = this;
 
@@ -9,6 +9,10 @@ angular.module('app.account')
         self.password = '';
         self.confirmPassword = '';
 
-        self.register = function () { accountService.register(self.user, self.password, self.confirmPassword); }
+        self.register = function () {
+            accountService.register(self.user, self.password, self.confirmPassword).then(function () {
+                $location.path('/login');
+            });
+        }
     };
 }]);

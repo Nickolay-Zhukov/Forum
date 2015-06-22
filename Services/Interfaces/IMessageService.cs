@@ -5,6 +5,7 @@ namespace Services.Interfaces
 {
     public interface IMessageService
     {
+        Task<MessageDto> GetMessageByIdAsync(int themeId, int id);
         Task<MessageDto> CreateNewMessageAsync(int themeId, MessageDto dto, string userId);
         Task<MessageDto> QuoteMessageAsync(int themeId, int id, MessageDto dto, string userId);
         Task EditMessageAsync(int themeId, int id, MessageDto dto, string userId);

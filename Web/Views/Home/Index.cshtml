@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/Client/assets/libs/html5-boilerplate/css/main.css">
     <link href="/Client/assets/css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="/Client/assets/css/bootstrap/bootstrap-custom.css" rel="stylesheet">
+    <link href="/Client/assets/css/angular-motion/angular-motion.min.css" rel="stylesheet">
     <link href="/Client/assets/css/common-styles.css" rel="stylesheet">
     <link href="/Client/assets/css/themes.css" rel="stylesheet">
     <link href="/Client/assets/css/messages.css" rel="stylesheet">
@@ -28,6 +29,14 @@
 
     <!-- Page content -->
     <div class="container">
+        <!-- Notifications area -->
+        <div class="notifications-area">
+            <div class="alert alert-danger" ng-show="alert.isShown">
+                <a href="javascript:void(0)" class="close" ng-click="alert.hide()">&times;</a>
+                <strong>Error:</strong> {{alert.message}}
+            </div>
+        </div>
+        <!-- Partial view -->
         <div ng-view></div>
     </div>
 
@@ -39,22 +48,40 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="/Client/assets/libs/jquery-2.1.3.js"></script>
+    <script src="/Client/assets/libs/jquery-2.1.3.min.js"></script>
     <script src="/Client/assets/libs/bootstrap.min.js"></script>
-    <script src="/Client/assets/libs/angular/angular.js"></script>
-    <script src="/Client/assets/libs/angular-route/angular-route.js"></script>
+    <script src="/Client/assets/libs/angular/angular.min.js"></script>
+    <script src="/Client/assets/libs/angular-route/angular-route.min.js"></script>
+    <script src="/Client/assets/libs/angular-strap/angular-strap.min.js"></script>
+    <script src="/Client/assets/libs/angular-strap/angular-strap.tpl.min.js"></script>
+
     <!-- App scripts -->
     <script src="/Client/app/app.js"></script>
+    
+    <script src="/Client/app/services/serverApiService.js"></script>
+    <script src="/Client/app/services/serverErrorInterceptorService.js"></script>
+    
+    <script src="/Client/app/uiElements/uiElementsService.js"></script>
+    <script src="/Client/app/uiElements/menubar/menubarDirective.js"></script>
+
     <script src="/Client/app/account/login/loginController.js"></script>
     <script src="/Client/app/account/login/loginViewModel.js"></script>
     <script src="/Client/app/account/register/registerController.js"></script>
     <script src="/Client/app/account/register/registerViewModel.js"></script>
     <script src="/Client/app/account/accountService.js"></script>
-    <script src="/Client/app/menubar/menubarController.js"></script>
-    <script src="/Client/app/menubar/menubarDirective.js"></script>
-    <script src="/Client/app/menubar/menubarViewModel.js"></script>
+    
     <script src="/Client/app/themes/themesController.js"></script>
-    <script src="/Client/app/themes/themesService.js"></script>
     <script src="/Client/app/themes/themesViewModel.js"></script>
+    <script src="/Client/app/themes/newTheme/newThemeController.js"></script>
+    <script src="/Client/app/themes/newTheme/newThemeViewModel.js"></script>
+    
+    <script src="/Client/app/themeDetails/themeDetailsController.js"></script>
+    <script src="/Client/app/themeDetails/themeDetailsViewModel.js"></script>
+    <script src="/Client/app/themeDetails/newEditMessage/newMessageController.js"></script>
+    <script src="/Client/app/themeDetails/newEditMessage/newMessageViewModel.js"></script>
+    <script src="/Client/app/themeDetails/newEditMessage/editMessageController.js"></script>
+    <script src="/Client/app/themeDetails/newEditMessage/editMessageViewModel.js"></script>
+    <script src="/Client/app/themeDetails/quoteMessage/quoteMessageController.js"></script>
+    <script src="/Client/app/themeDetails/quoteMessage/quoteMessageViewModel.js"></script>
 </body>
 </html>

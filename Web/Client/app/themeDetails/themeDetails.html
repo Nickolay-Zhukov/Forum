@@ -1,0 +1,40 @@
+﻿<div class="page-header">
+    <h2>{{vm.theme.Title}}</h2>
+</div>
+
+<!-- Message template -->
+<div class="row message" ng-repeat="message in vm.messages">
+    <div class="col-md-2">
+        <div>
+            <span class="user-name text-right">{{message.Author}}</span>
+        </div>
+    </div>
+    <div class="col-md-10">
+        <div>
+            <blockquote ng-show="message.Quote">
+                <p><strong>{{message.QuoteAuthor}}</strong> said</p>
+                <span>{{message.Quote}}</span>
+            </blockquote>
+            <p>{{message.Text}}</p>
+        </div>
+        <div class="message-footer">
+            <span>Added {{message.CreationDateTime | date:"dd.MM.yyyy"}} at {{message.CreationDateTime | date:"hh:mm:ss"}}</span>
+            <div class="pull-right">
+                <span ng-show ="accountState.isItemOwner(message.Author)">
+                    <a href="#/themes/{{vm.theme.Id}}/edit-message/{{message.Id}}">Edit</a> |
+                </span>
+                <span ng-show="accountState.isItemOwner(message.Author)">
+                    <a href="javascript:void(0)" ng-click="vm.deleteMessage(message.Id)">Delete</a> |
+                </span>
+                <a href="#/themes/{{vm.theme.Id}}/quote-message/{{message.Id}}" ng-show="accountState.isAuthorized()">Quote</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Buttons -->
+<div class="row button-container">
+    <div class="col-md-1 col-md-offset-2">
+        <button class="btn btn-default" ng-click="vm.addMessage()">Add message</button>
+    </div>
+</div>

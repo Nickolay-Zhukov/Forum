@@ -43,6 +43,15 @@ namespace Services.Implementations
         }
         #endregion // Check methods
 
+        public async Task<MessageDto> GetMessageByIdAsync(int themeId, int id)
+        {
+            var message = await _unitOfWork.MessagesRepository.GetByIdAsync(id);
+            IsEntityExist(message, id, "Message");
+            IsMessageInTheme(message, themeId);
+
+            return new MessageDto(message);
+        }
+        
         public async Task<MessageDto> CreateNewMessageAsync(int themeId, MessageDto dto, string userId)
         {
             IsDtoNotNull(dto);

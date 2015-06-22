@@ -19,19 +19,19 @@ namespace Web.Controllers.Api
         #endregion
 
         #region Controller actions
-        // GET api/Themes
+        // GET api/themes
         public IEnumerable<ThemeDto> GetThemes()
         {
             return _themesService.GetAllThemes();
         }
 
-        // GET api/Themes/5
+        // GET api/themes/5
         public async Task<IHttpActionResult> GetTheme(int id)
         {
             return Ok(await _themesService.GetThemeByIdAsync(id));
         }
 
-        // POST api/Themes
+        // POST api/themes
         [Authorize]
         public async Task<IHttpActionResult> PostTheme(ThemeDto requestDto)
         {
@@ -39,7 +39,7 @@ namespace Web.Controllers.Api
             return CreatedAtRoute("DefaultApi", new { id = responseDto.Id }, responseDto);
         }
 
-        // DELETE api/Themes/5
+        // DELETE api/themes/5
         [Authorize(Roles = "Admin")]
         public async Task<IHttpActionResult> DeleteTheme(int id)
         {

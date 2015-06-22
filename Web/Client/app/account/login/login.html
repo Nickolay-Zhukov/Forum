@@ -3,7 +3,6 @@
 </div>
 
 <form name="loginForm" class="form-horizontal v-gap" ng-submit="vm.login()" novalidate>
-    
     <!-- User name -->
     <div class="form-group row" ng-class="{ 'has-error' : loginForm.userName.$invalid && !loginForm.userName.$pristine }">
         <label class="control-label col-md-2">User name</label>
@@ -16,7 +15,6 @@
             <span ng-show="loginForm.userName.$dirty && loginForm.userName.$error.maxlength" class="help-block">Name is too long</span>
         </div>
     </div>
-
     <!-- Password -->
     <div class="form-group row" ng-class="{ 'has-error' : loginForm.password.$invalid && !loginForm.password.$pristine }">
         <label class="control-label col-md-2 ">Password</label>
@@ -29,7 +27,6 @@
             <span ng-show="loginForm.password.$dirty && loginForm.password.$error.maxlength" class="help-block">Password is too long</span>
         </div>
     </div>
-
     <!-- Buttons -->
     <div class="form-group row">
         <div class="col-md-5 col-md-offset-2">

@@ -225,12 +225,31 @@
     <Content Include="Client\app\account\register\register.html" />
     <Content Include="Client\app\account\register\registerController.js" />
     <Content Include="Client\app\account\register\registerViewModel.js" />
-    <Content Include="Client\app\menubar\menubar.html" />
-    <Content Include="Client\app\menubar\menubarDirective.js" />
+    <Content Include="Client\app\uiElements\uiElementsService.js" />
+    <Content Include="Client\app\uiElements\menubar\menubar.html" />
+    <Content Include="Client\app\uiElements\menubar\menubarDirective.js" />
+    <Content Include="Client\app\themeDetails\newEditMessage\editMessageController.js" />
+    <Content Include="Client\app\themeDetails\newEditMessage\editMessageViewModel.js" />
+    <Content Include="Client\app\themeDetails\newEditMessage\newEditMessage.html" />
+    <Content Include="Client\app\themeDetails\newEditMessage\newMessageController.js" />
+    <Content Include="Client\app\themeDetails\newEditMessage\newMessageViewModel.js" />
+    <Content Include="Client\app\themeDetails\quoteMessage\quoteMessage.html" />
+    <Content Include="Client\app\themeDetails\quoteMessage\quoteMessageController.js" />
+    <Content Include="Client\app\themeDetails\quoteMessage\quoteMessageViewModel.js" />
+    <Content Include="Client\app\themeDetails\themeDetails.html" />
+    <Content Include="Client\app\themeDetails\themeDetailsController.js" />
+    <Content Include="Client\app\themeDetails\themeDetailsViewModel.js" />
+    <Content Include="Client\app\themes\newTheme\newTheme.html" />
+    <Content Include="Client\app\themes\newTheme\newThemeController.js" />
+    <Content Include="Client\app\themes\newTheme\newThemeViewModel.js" />
     <Content Include="Client\app\themes\themes.html" />
     <Content Include="Client\app\themes\themesController.js" />
-    <Content Include="Client\app\themes\themesService.js" />
+    <Content Include="Client\app\services\serverApiService.js" />
     <Content Include="Client\app\themes\themesViewModel.js" />
+    <Content Include="Client\app\uiElements\deleteConfirm\deleteConfirm.html" />
+    <Content Include="Client\app\services\serverErrorInterceptorService.js" />
+    <Content Include="Client\assets\css\angular-motion\angular-motion.css" />
+    <Content Include="Client\assets\css\angular-motion\angular-motion.min.css" />
     <Content Include="Client\assets\css\bootstrap\bootstrap-custom.css" />
     <Content Include="Client\assets\css\bootstrap\bootstrap-theme.css" />
     <Content Include="Client\assets\css\bootstrap\bootstrap-theme.css.map" />
@@ -266,6 +285,10 @@
     <Content Include="Client\assets\libs\angular-route\bower.json" />
     <Content Include="Client\assets\libs\angular-route\package.json" />
     <Content Include="Client\assets\libs\angular-route\README.md" />
+    <Content Include="Client\assets\libs\angular-strap\angular-strap.js" />
+    <Content Include="Client\assets\libs\angular-strap\angular-strap.min.js" />
+    <Content Include="Client\assets\libs\angular-strap\angular-strap.tpl.js" />
+    <Content Include="Client\assets\libs\angular-strap\angular-strap.tpl.min.js" />
     <Content Include="Client\assets\libs\angular\.bower.json" />
     <Content Include="Client\assets\libs\angular\angular-csp.css" />
     <Content Include="Client\assets\libs\angular\angular.js" />
@@ -316,7 +339,6 @@
     <Content Include="Client\assets\libs\jquery.validate.unobtrusive.js" />
     <Content Include="Client\assets\libs\jquery.validate.unobtrusive.min.js" />
     <Content Include="Client\assets\libs\modernizr-2.8.3.js" />
-    <Content Include="Client\assets\libs\npm.js" />
     <Content Include="Client\assets\libs\respond.js" />
     <Content Include="Client\assets\libs\respond.matchmedia.addListener.js" />
     <Content Include="Client\assets\libs\respond.matchmedia.addListener.min.js" />
@@ -339,7 +361,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Client\app\messages\" />
+    <Folder Include="Client\app\uiElements\serverErrorNotification\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -359,9 +381,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Client\assets\css\angular-motion\angular-motion.min.css.map" />
     <None Include="Client\assets\libs\jquery-2.1.3.intellisense.js" />
     <None Include="Client\assets\libs\jquery.validate-vsdoc.js" />
-    <None Include="Client\assets\libs\_references.js" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
